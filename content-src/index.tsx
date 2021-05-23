@@ -1,3 +1,5 @@
+import App from "./App";
+
 GameUI.SetDefaultUIEnabled(
     DotaDefaultUIElement_t.DOTA_DEFAULT_UI_ACTION_PANEL,
     false
@@ -27,5 +29,5 @@ GameUI.SetDefaultUIEnabled(
     false
 );
 
-// const hudRoot = $.GetContextPanel().GetParent()!.GetParent()!;
-// hudRoot.FindChildTraverse("quickstats")!.style.visibility = "collapse";
+ReactPanorama.render(React.createElement(App), $.GetContextPanel());
+$.Msg(Object.keys(ReactPanorama));

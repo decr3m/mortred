@@ -5,6 +5,7 @@
         "lib": ["es2017"],
         "types": ["@moddota/panorama-types"],
         "moduleResolution": "node",
+        "noImplicitAny": false,
         "strict": true,
         "jsx": "react"
     }

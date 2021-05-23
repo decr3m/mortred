@@ -1,12 +1,8 @@
 <root>
-    <styles>
-        <include src="file://{resources}/styles/custom_game/example.css" />
-    </styles>
   <scripts>
-    <include src="file://{resources}/scripts/custom_game/manifest.js" />
     <include src="file://{resources}/scripts/custom_game/libs/react.development.js" />
     <include src="file://{resources}/scripts/custom_game/libs/react-panorama.development.js" />
-    <include src="file://{resources}/scripts/custom_game/script.js" />
+    <include src="file://{resources}/scripts/custom_game/index.js" />
   </scripts>
    <snippets>
         <snippet name="PlayerPortrait">
