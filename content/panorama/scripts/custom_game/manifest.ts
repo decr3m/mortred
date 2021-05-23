@@ -1,18 +1,18 @@
 GameUI.SetDefaultUIEnabled(
     DotaDefaultUIElement_t.DOTA_DEFAULT_UI_ACTION_PANEL,
-    true
+    false
 );
 GameUI.SetDefaultUIEnabled(
     DotaDefaultUIElement_t.DOTA_DEFAULT_UI_ACTION_MINIMAP,
-    true
+    false
 );
 GameUI.SetDefaultUIEnabled(
     DotaDefaultUIElement_t.DOTA_DEFAULT_UI_INVENTORY_PANEL,
-    true
+    false
 );
 GameUI.SetDefaultUIEnabled(
     DotaDefaultUIElement_t.DOTA_DEFAULT_UI_INVENTORY_SHOP,
-    true
+    false
 );
 GameUI.SetDefaultUIEnabled(
     DotaDefaultUIElement_t.DOTA_DEFAULT_UI_FLYOUT_SCOREBOARD,
@@ -27,5 +27,5 @@ GameUI.SetDefaultUIEnabled(
     false
 );
 
-const hudRoot = $.GetContextPanel().GetParent().GetParent();
-hudRoot.FindChildTraverse("quickstats").style.visibility = "collapse";
+// const hudRoot = $.GetContextPanel().GetParent()!.GetParent()!;
+// hudRoot.FindChildTraverse("quickstats")!.style.visibility = "collapse";

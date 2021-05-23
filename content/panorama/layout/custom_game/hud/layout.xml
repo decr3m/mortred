@@ -1,6 +1,0 @@
-<root>
-  <scripts>
-    <include src="file://{resources}/layout/custom_game/hud/script.js"></include>
-  </scripts>
-  <Panel></Panel>
-</root>
