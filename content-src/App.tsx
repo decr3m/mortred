@@ -9,7 +9,7 @@ export default function App() {
             <Label text={`Count ${count}`} />
             <Button
                 onactivate={increment}
-                text={`Click Me`}
+                text={`Click Me Here!!`}
                 sx={{ marginTop: "100px", marginLeft: "100px" }}
             />
         </Panel>

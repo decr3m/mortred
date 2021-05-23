@@ -1,19 +1,8 @@
 <root>
-  <scripts>
-    <include src="file://{resources}/scripts/custom_game/libs/react.development.js" />
-    <include src="file://{resources}/scripts/custom_game/libs/react-panorama.development.js" />
-    <include src="file://{resources}/scripts/custom_game/index.js" />
-  </scripts>
-   <snippets>
-        <snippet name="PlayerPortrait">
-            <Panel class="PlayerPortrait" hittest="false">
-                <Image id="HeroImage" hittest="false" />
-                <Label id="PlayerName" />
-                <Panel class="HealthContainer">
-                    <Panel id="HealthBar" />
-                </Panel>
-            </Panel>
-        </snippet>
-    </snippets>
-    <Panel  style="width: 100%; height: 100%;" />
+    <scripts>
+        <include src="file://{resources}/scripts/custom_game/manifest.js" />
+    </scripts>
+    <Panel>
+        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/hud.xml" />
+    </Panel>
 </root>

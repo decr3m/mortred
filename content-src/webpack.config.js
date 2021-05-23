@@ -1,5 +1,5 @@
 const path = require("path");
-// const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 /** @type {import('webpack').Configuration} */
 module.exports = {
@@ -33,11 +33,11 @@ module.exports = {
         // Required because of reverse symlinking
         symlinks: false,
     },
-    // plugins: [
-    //     new ForkTsCheckerWebpackPlugin({
-    //         typescript: {
-    //             configFile: path.resolve(__dirname, "tsconfig.json"),
-    //         },
-    //     }),
-    // ],
+    plugins: [
+        new ForkTsCheckerWebpackPlugin({
+            typescript: {
+                configFile: path.resolve(__dirname, "tsconfig.json"),
+            },
+        }),
+    ],
 };
