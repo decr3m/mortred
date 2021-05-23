@@ -27,5 +27,5 @@ GameUI.SetDefaultUIEnabled(
     false
 );
 
-const hudRoot = $.GetContextPanel().GetParent()!.GetParent()!;
-hudRoot.FindChildTraverse("quickstats")!.style.visibility = "collapse";
+const hudRoot = $.GetContextPanel().GetParent().GetParent();
+hudRoot.FindChildTraverse("quickstats").style.visibility = "collapse";

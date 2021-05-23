@@ -1,0 +1,6 @@
+<root>
+  <scripts>
+    <include src="./script.js" />
+  </scripts>
+  <Panel />
+</root>

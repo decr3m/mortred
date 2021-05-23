@@ -1,3 +1,4 @@
+import TPlayer from "./actors/TPlayer";
 import { reloadable } from "./lib/tstl-utils";
 import "./modifiers/modifier_panic";
 import { abilities } from "./rsc/abilities";
@@ -12,6 +13,7 @@ declare global {
 
 @reloadable
 export class GameMode {
+    private tPlayers: { [key: number]: TPlayer } = {};
     public static Precache(this: void, context: CScriptPrecacheContext) {
         PrecacheResource(
             "particle",
@@ -31,6 +33,7 @@ export class GameMode {
 
     constructor() {
         this.configure();
+        // https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Scripting/Built-In_Engine_Events#Game_events
         ListenToGameEvent(
             "game_rules_state_change",
             () => this.OnStateChange(),
@@ -41,6 +44,11 @@ export class GameMode {
             (event) => this.OnNpcSpawned(event),
             undefined
         );
+        // ListenToGameEvent(
+        //     "player_spawn",
+        //     (event) => this.OnPlayerSpawned(event),
+        //     undefined
+        // );
     }
 
     private configure(): void {
@@ -51,6 +59,7 @@ export class GameMode {
         GameRules.SetShowcaseTime(0);
         GameRules.SetStrategyTime(0);
         GameRules.SetHeroSelectionTime(heroSelectionTime);
+        GameRules.SetSameHeroSelectionEnabled(true);
     }
 
     public OnStateChange(): void {
@@ -110,9 +119,14 @@ export class GameMode {
         }
     }
 
+    private InitializeHero() {}
+
     // Called on script_reload
     public Reload() {
         print("Script reloaffded!!!");
+
+        const unit = EntIndexToHScript(439 as EntityIndex) as CDOTA_BaseNPC; // Cast to npc since this is the 'npc_spawned' event
+        print(unit);
         // CreateHTTPRequest("GET", "http://localhost:3006/").Send((response) => {
         //     print("response:", response.Body);
         // });
@@ -126,49 +140,49 @@ export class GameMode {
         //     print(player.GetName());
         // }
 
-        let myPlayerHero: CDOTA_BaseNPC_Hero | undefined;
+        // let myPlayerHero: CDOTA_BaseNPC_Hero | undefined;
 
-        for (let index = 0; index < PlayerResource.GetPlayerCount(); index++) {
-            const playerId = index as PlayerID;
-            const playerName = PlayerResource.GetPlayerName(playerId);
-            const player = PlayerResource.GetPlayer(playerId);
-            // print(player?.IsPlayer());
-            print(PlayerResource.GetSteamID(playerId));
-            print(playerName);
-            myPlayerHero = player?.GetAssignedHero();
-            // print(player?.steam);
-        }
-        // entities
-        // Entities.find
-        if (myPlayerHero) {
-            print(myPlayerHero.GetUnitName());
-            print("abilities");
-            // print();
-            // myPlayerHero.AddAbility(abilities["5461"]);
-            // myPlayerHero.RemoveAbility("ursa_earthshock");
+        // for (let index = 0; index < PlayerResource.GetPlayerCount(); index++) {
+        //     const playerId = index as PlayerID;
+        //     const playerName = PlayerResource.GetPlayerName(playerId);
+        //     const player = PlayerResource.GetPlayer(playerId);
+        //     // print(player?.IsPlayer());
+        //     print(PlayerResource.GetSteamID(playerId));
+        //     print(playerName);
+        //     myPlayerHero = player?.GetAssignedHero();
+        //     // print(player?.steam);
+        // }
+        // // entities
+        // // Entities.find
+        // if (myPlayerHero) {
+        //     print(myPlayerHero.GetUnitName());
+        //     print("abilities");
+        //     // print();
+        //     // myPlayerHero.AddAbility(abilities["5461"]);
+        //     // myPlayerHero.RemoveAbility("ursa_earthshock");
 
-            for (
-                let index = 0;
-                index < myPlayerHero.GetAbilityCount();
-                index++
-            ) {
-                const ability = myPlayerHero.GetAbilityByIndex(index);
-                if (!ability) continue;
-                // exclude special attributes
-                if (
-                    [
-                        ABILITY_TYPES.ABILITY_TYPE_ATTRIBUTES,
-                        ABILITY_TYPES.ABILITY_TYPE_HIDDEN,
-                    ].includes(ability.GetAbilityType()) ||
-                    ability.GetAbilityName() === "special_bonus_attributes"
-                )
-                    continue;
-                myPlayerHero.RemoveAbility(ability.GetAbilityName());
-                // print(abName);
-                // print(index);
-                // print(ability.GetAbilityName());
-            }
-        }
+        //     for (
+        //         let index = 0;
+        //         index < myPlayerHero.GetAbilityCount();
+        //         index++
+        //     ) {
+        //         const ability = myPlayerHero.GetAbilityByIndex(index);
+        //         if (!ability) continue;
+        //         // exclude special attributes
+        //         if (
+        //             [
+        //                 ABILITY_TYPES.ABILITY_TYPE_ATTRIBUTES,
+        //                 ABILITY_TYPES.ABILITY_TYPE_HIDDEN,
+        //             ].includes(ability.GetAbilityType()) ||
+        //             ability.GetAbilityName() === "special_bonus_attributes"
+        //         )
+        //             continue;
+        //         myPlayerHero.RemoveAbility(ability.GetAbilityName());
+        //         // print(abName);
+        //         // print(index);
+        //         // print(ability.GetAbilityName());
+        //     }
+        // }
 
         // print(me.GetName());
         print("huhu");
@@ -176,8 +190,17 @@ export class GameMode {
 
     private OnNpcSpawned(event: NpcSpawnedEvent) {
         // After a hero unit spawns, apply modifier_panic for 8 seconds
-        // const unit = EntIndexToHScript(event.entindex) as CDOTA_BaseNPC; // Cast to npc since this is the 'npc_spawned' event
-        // if (unit.IsRealHero()) {
+        const unit = EntIndexToHScript(event.entindex) as CDOTA_BaseNPC; // Cast to npc since this is the 'npc_spawned' event
+        print("npc new! " + event.entindex);
+        if (unit.IsRealHero()) {
+            const hero = unit as CDOTA_BaseNPC_Hero;
+            print(hero.GetName());
+            const playerId = hero.GetPlayerOwnerID();
+            if (!this.tPlayers[playerId]) {
+                this.tPlayers[playerId] = new TPlayer(playerId, hero);
+            }
+            // unit.kil
+        }
         //     Timers.CreateTimer(1, () => {
         //         unit.AddNewModifier(unit, undefined, "modifier_panic", {
         //             duration: 8,
