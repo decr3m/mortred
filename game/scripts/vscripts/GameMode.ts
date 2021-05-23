@@ -1,5 +1,6 @@
 import { reloadable } from "./lib/tstl-utils";
 import "./modifiers/modifier_panic";
+import { abilities } from "./rsc/abilities";
 
 const heroSelectionTime = 10;
 
@@ -97,6 +98,16 @@ export class GameMode {
     private StartGame(): void {
         print("Game starting!");
         // Do some stuff here
+        for (let index = 0; index < PlayerResource.GetPlayerCount(); index++) {
+            const playerId = index as PlayerID;
+            const playerName = PlayerResource.GetPlayerName(playerId);
+            // const player = PlayerResource.GetPlayer(playerId);
+            // print(player?.IsPlayer());
+            print(PlayerResource.GetSteamID(playerId));
+            print(playerName);
+
+            // print(player?.steam);
+        }
     }
 
     // Called on script_reload
@@ -106,6 +117,61 @@ export class GameMode {
         //     print("response:", response.Body);
         // });
         // Do some stuff here
+        // const hero: CBaseEntity = EntIndexToHScript(0);
+
+        // const players: CBaseEntity[] =
+        //     Entities.FindAllByClassname("npc_dota_hero_*");
+        // print(">>vscripts/GameMode::", "players.", players.length); //TRACE
+        // for (const player of players) {
+        //     print(player.GetName());
+        // }
+
+        let myPlayerHero: CDOTA_BaseNPC_Hero | undefined;
+
+        for (let index = 0; index < PlayerResource.GetPlayerCount(); index++) {
+            const playerId = index as PlayerID;
+            const playerName = PlayerResource.GetPlayerName(playerId);
+            const player = PlayerResource.GetPlayer(playerId);
+            // print(player?.IsPlayer());
+            print(PlayerResource.GetSteamID(playerId));
+            print(playerName);
+            myPlayerHero = player?.GetAssignedHero();
+            // print(player?.steam);
+        }
+        // entities
+        // Entities.find
+        if (myPlayerHero) {
+            print(myPlayerHero.GetUnitName());
+            print("abilities");
+            // print();
+            // myPlayerHero.AddAbility(abilities["5461"]);
+            // myPlayerHero.RemoveAbility("ursa_earthshock");
+
+            for (
+                let index = 0;
+                index < myPlayerHero.GetAbilityCount();
+                index++
+            ) {
+                const ability = myPlayerHero.GetAbilityByIndex(index);
+                if (!ability) continue;
+                // exclude special attributes
+                if (
+                    [
+                        ABILITY_TYPES.ABILITY_TYPE_ATTRIBUTES,
+                        ABILITY_TYPES.ABILITY_TYPE_HIDDEN,
+                    ].includes(ability.GetAbilityType()) ||
+                    ability.GetAbilityName() === "special_bonus_attributes"
+                )
+                    continue;
+                myPlayerHero.RemoveAbility(ability.GetAbilityName());
+                // print(abName);
+                // print(index);
+                // print(ability.GetAbilityName());
+            }
+        }
+
+        // print(me.GetName());
+        print("huhu");
     }
 
     private OnNpcSpawned(event: NpcSpawnedEvent) {
